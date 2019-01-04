@@ -41,12 +41,12 @@ func (s *server) resolveComponent(dirPath, childQuery string, predicate func(os.
 		if err != nil {
 			return "", err
 		}
+
+		sort.Strings(children)
 		if s.cache != nil {
 			s.cache.Add(key, children)
 		}
 	}
-
-	sort.Strings(children)
 
 	normSegment := ""
 	for _, child := range children {
