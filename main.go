@@ -20,8 +20,6 @@ type server struct {
 	quiet bool
 }
 
-var resolveComponentScratchBuffer []byte
-
 // Search a directory `path` for a file `childQuery` while ignoring case, which satisfies `predicate`.
 // Returns an empty string if no file is found.
 func (s *server) resolveComponent(dirPath, childQuery string, predicate func(os.FileInfo) bool) (string, error) {
@@ -33,11 +31,7 @@ func (s *server) resolveComponent(dirPath, childQuery string, predicate func(os.
 		entry, _ := s.cache.Get(key)
 		children = entry.([]string)
 	} else {
-		if resolveComponentScratchBuffer == nil {
-			resolveComponentScratchBuffer = make([]byte, 2*os.Getpagesize())
-		}
-
-		children, err = godirwalk.ReadDirnames(dirPath, resolveComponentScratchBuffer)
+		children, err = godirwalk.ReadDirnames(dirPath, nil)
 		if err != nil {
 			return "", err
 		}
